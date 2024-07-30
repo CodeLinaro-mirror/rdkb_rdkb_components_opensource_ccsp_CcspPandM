@@ -65,6 +65,18 @@ AC_ARG_ENABLE([maptsupport],
              [echo "mapt is disabled"])
 AM_CONDITIONAL(FEATURE_SUPPORT_MAPT_NAT46, test "x$MAPT_SUPPORT_ENABLED" = xtrue)
 
+AC_ARG_ENABLE([maptunificationsupport],
+             AS_HELP_STRING([--enable-maptunificationsupport],[enable mapt unification support (default is no)]),
+             [
+              case "${enableval}" in
+               yes) MAPT_UNIFICATION_SUPPORT_ENABLED=true;;
+               no)  MAPT_UNIFICATION_SUPPORT_ENABLED=false;;
+               *) AC_MSG_ERROR([bad value ${enableval} for --enable-maptunificationsupport ]);;
+              esac
+             ],
+             [echo "mapt unification is disabled"])
+AM_CONDITIONAL(MAPT_UNIFICATION_ENABLED, test "x$MAPT_UNIFICATION_SUPPORT_ENABLED" = xtrue)
+
 SYSTEMD_CFLAGS=" "
 SYSTEMD_LDFLAGS=" "
 AC_ARG_ENABLE([notify],

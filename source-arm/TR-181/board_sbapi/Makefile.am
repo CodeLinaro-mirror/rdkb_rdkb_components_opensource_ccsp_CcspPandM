@@ -85,7 +85,9 @@ libCcspPandM_board_sbapi_la_SOURCES += \
 endif
 
 if FEATURE_SUPPORT_MAPT_NAT46
+if !MAPT_UNIFICATION_ENABLED
 libCcspPandM_board_sbapi_la_SOURCES += cosa_mapt_apis.c
+endif
 endif
 
 if FEATURE_SUPPORT_MANAGE_WIFI

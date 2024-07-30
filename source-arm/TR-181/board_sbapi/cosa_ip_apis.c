@@ -717,11 +717,11 @@ static int _get_datetime_lfts(char * p_pref_datetime, int len1,  char * p_valid_
     }
 
 #if defined(FEATURE_RDKB_CONFIGURABLE_WAN_INTERFACE)
-        snprintf(sysEventName, sizeof(sysEventName), COSA_DML_WANIface_PREF_PRETM_SYSEVENT_NAME, (char *)g_ipif_names[ulIndex]);
+        snprintf(sysEventName, sizeof(sysEventName), COSA_DML_WANIface_ADDR_PRETM_SYSEVENT_NAME, (char *)g_ipif_names[ulIndex]);
         commonSyseventSet(sysEventName, iana_pretm);
 
         memset( sysEventName, 0, sizeof(sysEventName));
-        snprintf(sysEventName, sizeof(sysEventName), COSA_DML_WANIface_PREF_VLDTM_SYSEVENT_NAME, (char *)g_ipif_names[ulIndex]);
+        snprintf(sysEventName, sizeof(sysEventName), COSA_DML_WANIface_ADDR_VLDTM_SYSEVENT_NAME, (char *)g_ipif_names[ulIndex]);
         commonSyseventSet(sysEventName, iana_vldtm);
 #else    
     commonSyseventSet(COSA_DML_DHCPV6C_ADDR_PRETM_SYSEVENT_NAME, iana_pretm);
@@ -1064,7 +1064,7 @@ IPIF_getEntry_for_Ipv6Addr
 	#endif
             #if defined(FEATURE_RDKB_CONFIGURABLE_WAN_INTERFACE)
                 memset( sysEventName, 0, sizeof(sysEventName));
-                snprintf(sysEventName, sizeof(sysEventName), COSA_DML_WANIface_PREF_PRETM_SYSEVENT_NAME, (char *)g_ipif_names[ulIndex]);
+                snprintf(sysEventName, sizeof(sysEventName), COSA_DML_WANIface_ADDR_PRETM_SYSEVENT_NAME, (char *)g_ipif_names[ulIndex]);
                 if (!commonSyseventGet(sysEventName, out, sizeof(out)) )
             #else		    
 	        if (!commonSyseventGet(COSA_DML_DHCPV6C_ADDR_PRETM_SYSEVENT_NAME, out, sizeof(out)) )
@@ -1077,7 +1077,7 @@ IPIF_getEntry_for_Ipv6Addr
 		}
            #if defined(FEATURE_RDKB_CONFIGURABLE_WAN_INTERFACE)
                 memset( sysEventName, 0, sizeof(sysEventName));
-                snprintf(sysEventName, sizeof(sysEventName), COSA_DML_WANIface_PREF_VLDTM_SYSEVENT_NAME, (char *)g_ipif_names[ulIndex]);
+                snprintf(sysEventName, sizeof(sysEventName), COSA_DML_WANIface_ADDR_VLDTM_SYSEVENT_NAME, (char *)g_ipif_names[ulIndex]);
                 if (!commonSyseventGet(sysEventName, out, sizeof(out)) )
            #else
 		if (!commonSyseventGet(COSA_DML_DHCPV6C_ADDR_VLDTM_SYSEVENT_NAME, out, sizeof(out)) ) 

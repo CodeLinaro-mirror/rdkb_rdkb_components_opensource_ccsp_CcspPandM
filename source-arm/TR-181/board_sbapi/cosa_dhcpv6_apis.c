@@ -1099,7 +1099,9 @@ static struct {
     pthread_t          dbgthrds;
 }g_be_ctx;
 
+#if !defined(FEATURE_RDKB_CONFIGURABLE_WAN_INTERFACE) 
 static void * dhcpv6c_dbg_thrd(void * in);
+#endif
 static void * dhcpv6s_dbg_thrd(void * in);
 
 extern COSARepopulateTableProc            g_COSARepopulateTable;
@@ -1524,7 +1526,7 @@ static ULONG                               uDhcpv6ServerPoolNum                 
 static COSA_DML_DHCPSV6_POOL_FULL          sDhcpv6ServerPool[DHCPV6S_POOL_NUM]                   = {};
 static ULONG                               uDhcpv6ServerPoolOptionNum[DHCPV6S_POOL_NUM]          = {0};
 static COSA_DML_DHCPSV6_POOL_OPTION        sDhcpv6ServerPoolOption[DHCPV6S_POOL_NUM][DHCPV6S_POOL_OPTION_NUM] = {};
-#if defined(MULTILAN_FEATURE)
+#if defined(MULTILAN_FEATURE)  && !defined(FEATURE_RDKB_CONFIGURABLE_WAN_INTERFACE)
 static char v6addr_prev[IPV6_PREF_MAXLEN] = {0};
 #endif
 
@@ -1871,12 +1873,14 @@ CosaDmlDhcpv6SMsgHandler
         g_dhcpv6_server_prefix_ready = TRUE;
     }
 
+#if !defined(FEATURE_RDKB_CONFIGURABLE_WAN_INTERFACE) 
     /*we start a thread to hear dhcpv6 client message about prefix/address */
     if ( !mkfifo(CCSP_COMMON_FIFO, 0666) || errno == EEXIST )
     {
         if (pthread_create(&g_be_ctx.dbgthrdc, NULL, dhcpv6c_dbg_thrd, NULL)  || pthread_detach(g_be_ctx.dbgthrdc)) 
             CcspTraceWarning(("%s error in creating dhcpv6c_dbg_thrd\n", __FUNCTION__));
     }
+#endif
 
     /*we start a thread to hear dhcpv6 server messages */
     if ( !mkfifo(DHCPS6V_SERVER_RESTART_FIFO, 0666) || errno == EEXIST )
@@ -4456,6 +4460,14 @@ void __cosa_dhcpsv6_refresh_config()
     if (!fp)
         goto EXIT;
 
+#if defined(FEATURE_RDKB_CONFIGURABLE_WAN_INTERFACE) 
+    // sysevent_fd_global is not initialized in dhcpv6c_dbg thread for WanUnification enabled builds. 
+    if(sysevent_fd_global == 0) 
+    {
+        sysevent_fd_global = sysevent_open("127.0.0.1", SE_SERVER_WELL_KNOWN_PORT, SE_VERSION, "sysevent dhcpv6", &sysevent_token_global);
+        CcspTraceWarning(("%s sysevent_fd_global is %d\n", __FUNCTION__, sysevent_fd_global));
+    }
+#endif
     /*Begin write configuration */
     {
         char buf[12];
@@ -8698,6 +8710,8 @@ EXIT:
     return NULL;
 }
 
+#if !defined(FEATURE_RDKB_CONFIGURABLE_WAN_INTERFACE) 
+
 /*******************************************************
 * Function Name : isDropbearRunningWithIpv6 (char *pIpv6Addr)
 *      It will verify, dropbear process is running with provided IPv6 address or not
@@ -9990,6 +10004,8 @@ EXIT:
 
     return NULL;
 }
+#endif
+
 #if defined(FEATURE_RDKB_WAN_MANAGER)
 int send_dhcp_data_to_wanmanager (ipc_dhcpv6_data_t *dhcpv6_data, int msgtype)
 {
