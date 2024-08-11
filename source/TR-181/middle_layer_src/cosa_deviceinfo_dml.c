@@ -22917,7 +22917,7 @@ NonRootSupport_GetParamStringValue
 )
 {
   UNREFERENCED_PARAMETER(hInsContext);
-  #define APPARMOR_BLOCKLIST_FILE "/opt/secure/Apparmor_blocklist"
+  #define APPARMOR_BLOCKLIST_FILE "/nvram/Apparmor_blocklist"
   #define APPARMOR_PROFILE_DIR "/etc/apparmor.d"
   #define SIZE_LEN 32
   char *buf = NULL;
@@ -22947,11 +22947,10 @@ NonRootSupport_GetParamStringValue
          while((read = getline(&buf, &len, fp)) != -1) {
 	     // CID 279876 : Buffer not null terminated (BUFFER_SIZE)
              strncpy(tmp,buf,sizeof(tmp)-1);
+             tmp[sizeof(tmp)-1] = '\0';
              strtok_r(buf,":",&sptr);
              if(buf != NULL) {
-                if(strstr(files_name, buf) != NULL )  {
-                   strncat(pValue,tmp,strlen(tmp));
-                }
+                 strncat(pValue,tmp,strlen(tmp));
              }
          }
          fclose(fp);
@@ -22998,6 +22997,7 @@ static BOOL ValidateInput_Arguments(char *input, FILE *tmp_fptr)
   char *token=NULL;
   char *subtoken=NULL;
   char *sub_string=NULL;
+  char *service_profile = NULL;
   char *sp=NULL;
   char *sptr=NULL;
   char tmp[BUF_SIZE]={0};
@@ -23039,13 +23039,16 @@ static BOOL ValidateInput_Arguments(char *input, FILE *tmp_fptr)
         }
 	// CID 180948 : Buffer not null terminated (BUFFER_SIZE)
         strncpy(tmp,token,sizeof(tmp)-1);
+        tmp[sizeof(tmp) - 1] = '\0';
         subtoken=strtok_r(tmp,":",&sptr);
-        if(subtoken != NULL) {
-           sub_string=strstr(files_name, subtoken);
-           if(sub_string != NULL) {
-              fprintf(tmp_fptr,"%s\n",token);
+        if (subtoken != NULL) {
+           sub_string = strstr(files_name, subtoken);
+           if (sub_string == NULL) {
+                service_profile = strstr(subtoken, "service.sp");
            }
-           else {
+           if (sub_string != NULL || service_profile != NULL) {
+              fprintf(tmp_fptr, "%s\n", token);
+           } else {
               CcspTraceWarning(("Invalid arguments %s error found in the parser\n", subtoken));
               return FALSE;
            }
@@ -23064,8 +23067,8 @@ NonRootSupport_SetParamStringValue
  )
 {
   UNREFERENCED_PARAMETER(hInsContext);
-  #define APPARMOR_BLOCKLIST_FILE "/opt/secure/Apparmor_blocklist"
-  #define TMP_FILE "/opt/secure/Apparmor_blocklist_bck.txt"
+  #define APPARMOR_BLOCKLIST_FILE "/nvram/Apparmor_blocklist"
+  #define TMP_FILE "/nvram/Apparmor_blocklist_bck.txt"
   #define SIZE 128
   #define MAX_SIZE 1024
   FILE *fptr = NULL;
