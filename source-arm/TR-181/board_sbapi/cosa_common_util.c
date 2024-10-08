@@ -74,6 +74,9 @@
 #include "safec_lib_common.h"
 #include "dslh_definitions_database.h"
 
+#define IPV6_PREFIX "Device.IP.Interface.1.IPv6Prefix.1.Prefix"
+#define IPV6_PREFIX_EVENT "tr_erouter0_dhcpv6_client_v6pref"
+
 #ifdef _HUB4_PRODUCT_REQ_
 
 #include "cosa_lanmanagement_apis.h"
@@ -411,16 +414,16 @@ EvtDispterCallFuncByEvent
 static int se_fd = 0; 
 static token_t token;
 
-static async_id_t async_id[6];
+static async_id_t async_id[7];
 
 static short server_port;
 static char  server_ip[19];
 #ifdef _HUB4_PRODUCT_REQ_
 enum {EVENT_ERROR=-1, EVENT_OK, EVENT_TIMEOUT, EVENT_HANDLE_EXIT, EVENT_LAN_STARTED=0x10, EVENT_LAN_STOPPED, 
-        EVENT_WAN_STARTED=0x20, EVENT_WAN_STOPPED,EVENT_WAN_IPV4_RECD=0x30, EVENT_WAN_IPV6_RECD, EVENT_VALID_ULA_ADDRESS=0x40, EVENT_DIBBLER_SERVER_RESTART=0x50};
+        EVENT_WAN_STARTED=0x20, EVENT_WAN_STOPPED,EVENT_WAN_IPV4_RECD=0x30, EVENT_WAN_IPV6_RECD,EVENT_IPV6_PREFIX_RECD, EVENT_VALID_ULA_ADDRESS=0x40, EVENT_DIBBLER_SERVER_RESTART=0x50};
 #else
 enum {EVENT_ERROR=-1, EVENT_OK, EVENT_TIMEOUT, EVENT_HANDLE_EXIT, EVENT_LAN_STARTED=0x10, EVENT_LAN_STOPPED,
-        EVENT_WAN_STARTED=0x20, EVENT_WAN_STOPPED,EVENT_WAN_IPV4_RECD=0x30, EVENT_WAN_IPV6_RECD};
+        EVENT_WAN_STARTED=0x20, EVENT_WAN_STOPPED,EVENT_WAN_IPV4_RECD=0x30, EVENT_WAN_IPV6_RECD,EVENT_IPV6_PREFIX_RECD};
 #endif
 
 #if defined (RBUS_WAN_IP)
@@ -478,7 +481,7 @@ Set_Notifi_ParamName(void *args)
     if(rc < EOK)
     {
         ERR_CHK(rc);
-        CcspTraceError(("%s Failed to create WAN IP event data. Returning :%d\n", __FUNCTION__, __LINE__));
+        CcspTraceError(("%s Failed to create event data. Returning :%d\n", __FUNCTION__, __LINE__));
         goto EXIT;
     }
 
@@ -488,7 +491,7 @@ Set_Notifi_ParamName(void *args)
     
     //wait for 30s to update wan status and send notification
     sleep(30);
-    CcspTraceInfo(("Sending WAN_IP notification after 30sec\n"));
+    CcspTraceInfo(("Sending notification after 30sec\n"));
     /* Check if file exists. Wait for max 2 mins for WebPA to create the file
      * and send the notification.
      */
@@ -543,6 +546,48 @@ Set_Notifi_ParamName(void *args)
         return NULL;
 }
 
+int Send_WebPANotification_prefix(char* parameterName, char *prefix, char *previous_prefix){
+    if((parameterName == NULL) || (prefix == NULL) || (previous_prefix == NULL))
+    {
+        CcspTraceError(("%s arguments are NULL\n", __FUNCTION__ ));
+        return EVENT_ERROR;
+    }
+
+    pthread_t threadId;
+    arg_struct_t *prefix_args = NULL;
+    prefix_args = (arg_struct_t *)malloc(sizeof(arg_struct_t));
+
+    if(prefix_args != NULL)
+    {
+        CcspTraceDebug(("%s prefix_args for is valid: %d \n", __FUNCTION__, __LINE__)); 
+        memset(prefix_args, 0, sizeof(arg_struct_t));
+ 
+        prefix_args->parameterName = strdup(parameterName);
+        prefix_args->writeID         = 256;
+        prefix_args->newValue = strdup(prefix);
+        prefix_args->oldValue = strdup(previous_prefix);
+        prefix_args->type            = ccsp_string;
+        CcspTraceDebug(("%s pthread_create with arguments: %s,%u,%s,%s,%d, LINE: %d\n", __FUNCTION__, prefix_args->parameterName, prefix_args->writeID, prefix_args->newValue, prefix_args->oldValue, prefix_args->type,__LINE__)); 
+
+        if (pthread_create(&threadId, NULL, Set_Notifi_ParamName, (void *) prefix_args) != 0) 
+        {
+            CcspTraceError(("%s: Error creating thread Set_Notifi_ParamName for %d\n", __FUNCTION__,__LINE__));
+            free_args_struct(prefix_args);
+            return EVENT_ERROR;
+        }
+        else{
+            CcspTraceInfo(("%s: Created thread Set_Notifi_ParamName for %d\n", __FUNCTION__,__LINE__));
+        }
+    }
+    else
+    {
+        CcspTraceError(("%s prefix_args NULL.\n", __FUNCTION__ ));
+        return EVENT_ERROR;
+    }
+    return(EVENT_OK);
+
+}
+
 int Send_WebPANotification_WANIP(char* parameterName, char *ip_addrs, char *previous_ip){
     if((parameterName == NULL) || (ip_addrs == NULL) || (previous_ip == NULL))
     {
@@ -591,6 +636,31 @@ int Send_WebPANotification_WANIP(char* parameterName, char *ip_addrs, char *prev
     return(EVENT_OK);
 }
 #endif /*RBUS_WAN_IP*/
+
+static void
+EvtDispterIpv6PrefixCallback( char *prefix )
+{
+    static char previous_prefix[64] =  "::";
+    CcspTraceInfo(("%s: Received IPv6 prefix: %s\n", __FUNCTION__, prefix));
+    if (strcmp(previous_prefix, prefix) != 0) {
+        CcspTraceInfo(("%s New Prefix change detected: %s, Previous prefix: %s\n", __FUNCTION__, prefix, previous_prefix));
+
+        int ret = Send_WebPANotification_prefix(IPV6_PREFIX, prefix, previous_prefix);
+        if(ret == EVENT_OK){
+            CcspTraceInfo(("%s: Send_WebPANotification_Prefix completed for IPv6 Prefix and Set_Notifi_ParamName thread created. %d, ret: %d \n", __FUNCTION__,__LINE__, ret)); 
+        }
+        else{
+            CcspTraceError(("%s: Send_WebPANotification_Prefix failed %d, ret: %d \n", __FUNCTION__,__LINE__, ret)); 
+        }
+        // Storing new IPv6 prefix
+        strncpy(previous_prefix, prefix, sizeof(previous_prefix) - 1);
+     }
+     else
+     {
+        CcspTraceInfo(("%s ipv6 prefix remains the same: %s\n", __FUNCTION__, previous_prefix));
+     }
+
+}
 static void
 EvtDispterWanIpAddrsCallback(char *ip_addrs)
 {
@@ -719,6 +789,11 @@ EvtDispterEventInits(void)
     if (rc) {
        return(EVENT_ERROR);
     }
+    //register tr_erouter0_dhcpv6_client_v6pref event
+    rc = sysevent_setnotification(se_fd, token, IPV6_PREFIX_EVENT, &async_id[6]);
+    if (rc) {
+       return(EVENT_ERROR);
+    }
 #if defined (RBUS_WAN_IP)
 #if defined (_HUB4_PRODUCT_REQ_) || defined (_SR213_PRODUCT_REQ_)
     //register lan_ipaddr_v6 event
@@ -822,6 +897,11 @@ EvtDispterEventListen(void)
                 EvtDispterWanIpAddrsCallback(value_str);
                 ret = EVENT_WAN_IPV4_RECD;
             }
+            else if(!strcmp(name_str,IPV6_PREFIX_EVENT))
+            {
+                EvtDispterIpv6PrefixCallback(value_str);
+                ret = EVENT_IPV6_PREFIX_RECD;
+            }
 #if defined (RBUS_WAN_IP)
 #if defined (_HUB4_PRODUCT_REQ_) || defined (_SR213_PRODUCT_REQ_)
             else if(!strcmp(name_str, "lan_ipaddr_v6"))
@@ -885,6 +965,7 @@ EvtDispterEventClose(void)
     sysevent_rmnotification(se_fd, token, async_id[4]);
     sysevent_rmnotification(se_fd, token, async_id[5]);
 #endif
+    sysevent_rmnotification(se_fd, token, async_id[6]);
     /* close this session with syseventd */
     sysevent_close(se_fd, token);
 
@@ -916,6 +997,10 @@ EvtDispterCheckEvtStatus(int fd, token_t token)
         if (0 == strncmp(evtValue, "started", strlen("started")))
             if (ANSC_STATUS_SUCCESS != EvtDispterCallFuncByEvent("wan-status"))
                 returnStatus = ANSC_STATUS_FAILURE;
+    }
+    if ( 0 == sysevent_get(fd, token, IPV6_PREFIX_EVENT, evtValue, sizeof(evtValue)) && '\0' != evtValue[0])
+    {
+        EvtDispterIpv6PrefixCallback(evtValue);
     }
 
     /*dibblerServer-restart*/
@@ -982,6 +1067,8 @@ EvtDispterEventHandler(void *arg)
             case EVENT_WAN_STOPPED:
                 break;
             case EVENT_WAN_IPV4_RECD:
+                break;
+            case EVENT_IPV6_PREFIX_RECD:
                 break;
 #if defined (RBUS_WAN_IP)
             case EVENT_WAN_IPV6_RECD:
