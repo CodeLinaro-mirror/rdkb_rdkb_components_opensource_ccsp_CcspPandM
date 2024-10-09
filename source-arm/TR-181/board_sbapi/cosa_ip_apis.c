@@ -337,10 +337,12 @@ static USG_IF_CFG_T g_usg_if_cfg[] =
 #if defined(_COSA_INTEL_USG_ARM_) && !defined(_ENABLE_DSL_SUPPORT_)
 #ifndef _PLATFORM_RASPBERRYPI_
 #ifndef _PLATFORM_TURRIS_
+#ifndef _PLATFORM_BANANAPI_R4_    
     {"wan0",        COSA_DML_LINK_TYPE_DOCSIS,  TRUE},  /*DH  wan0 should never appear here -- CM extensions are for DOCSIS interfaces */
 #endif
 #endif
 #endif
+#endif      
     {"lo",          COSA_DML_LINK_TYPE_EthLink, FALSE}, /*DH  change the value of gDmsbIpIfLoopbackInstNum too, if "lo" is moved to a different location */
     /*
      *  Multi-LAN -- still have to keep primary LAN interface for IPv6 settings -- overlapping with MLAN configuration

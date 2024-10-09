@@ -96,7 +96,7 @@
 #include "cm_hal_oem.h"
 #endif
 
-#if defined(_PLATFORM_RASPBERRYPI_)
+#if defined(_PLATFORM_RASPBERRYPI_) || defined(_PLATFORM_BANANAPI_R4_)
 #include <unistd.h>
 #include <sys/types.h>
 #endif
@@ -206,7 +206,7 @@ static const char *atomIp = ATOM_IP;
     #define BLOCKLIST_FILE "/opt/secure/Blocklist_file.txt"
 #endif
 
-#if defined(_PLATFORM_RASPBERRYPI_)
+#if defined(_PLATFORM_RASPBERRYPI_) || defined(_PLATFORM_BANANAPI_R4_)
 int sock;
 int id = 0;
 #endif
@@ -1160,7 +1160,7 @@ DeviceInfo_SetParamBoolValue
 {
     PCOSA_DATAMODEL_DEVICEINFO      pMyObject = (PCOSA_DATAMODEL_DEVICEINFO)g_pCosaBEManager->hDeviceInfo;
     BOOL                            bReturnValue;
-#if defined(_PLATFORM_RASPBERRYPI_)
+#if defined(_PLATFORM_RASPBERRYPI_) || defined(_PLATFORM_BANANAPI_R4_)
     id =getuid();    
 #endif
     
@@ -1182,7 +1182,7 @@ DeviceInfo_SetParamBoolValue
         {
 		/* Restart Firewall */
 		v_secure_system("sysevent set firewall-restart");
-#if defined(_PLATFORM_RASPBERRYPI_)
+#if defined(_PLATFORM_RASPBERRYPI_) || defined(_PLATFORM_BANANAPI_R4_)
                if(id!=0)
                {
                        char *lxcevt = "sysevent set firewall-restart";
@@ -7848,7 +7848,7 @@ Iot_SetParamBoolValue
     /* check the parameter name and set the corresponding value */
     if (strcmp(ParamName, "X_RDKCENTRAL-COM_ENABLEIOT") == 0)
     {
-#if defined(_PLATFORM_RASPBERRYPI_)
+#if defined(_PLATFORM_RASPBERRYPI_) || defined(_PLATFORM_BANANAPI_R4_)
        id=getuid();
 #endif
 
@@ -7861,7 +7861,7 @@ Iot_SetParamBoolValue
                 if(bValue){
                    AnscTraceWarning(("IOT_LOG : Raise IOT event up from DML\n"));
                    v_secure_system("sysevent set iot_status up");
-#if defined(_PLATFORM_RASPBERRYPI_)
+#if defined(_PLATFORM_RASPBERRYPI_) || defined(_PLATFORM_BANANAPI_R4_)
                if(id!=0)
                {
                  char *lxcevt = "sysevent set iot_status up";
@@ -7872,7 +7872,7 @@ Iot_SetParamBoolValue
                 else{
                    AnscTraceWarning(("IOT_LOG : Raise IOT event down from DML\n"));
                    v_secure_system("sysevent set iot_status down");
-#if defined(_PLATFORM_RASPBERRYPI_)
+#if defined(_PLATFORM_RASPBERRYPI_) || defined(_PLATFORM_BANANAPI_R4_)
                 if(id!=0)
                  {
                    char *lxcevt = "sysevent set iot_status down";
@@ -11865,7 +11865,7 @@ AllowOpenPorts_SetParamBoolValue
 
             // restart firewall
             v_secure_system("sysevent set firewall-restart");
-#if defined(_PLATFORM_RASPBERRYPI_)
+#if defined(_PLATFORM_RASPBERRYPI_) || defined(_PLATFORM_BANANAPI_R4_)
       if(id!=0)
        {
 		   char *lxcevt = "sysevent set firewall-restart";
@@ -23945,7 +23945,7 @@ SelfHeal_SetParamUlongValue
 	    AnscTraceWarning(("Minimum interval is 2 for %s !\n", ParamName));
 	    return FALSE;
 	}
-#if defined(_ARRIS_XB6_PRODUCT_REQ_) || defined(_CBR_PRODUCT_REQ_) || defined(_PLATFORM_RASPBERRYPI_) || defined(_PLATFORM_TURRIS_) || \
+#if defined(_ARRIS_XB6_PRODUCT_REQ_) || defined(_CBR_PRODUCT_REQ_) || defined(_PLATFORM_RASPBERRYPI_) || defined(_PLATFORM_TURRIS_) || defined(_PLATFORM_BANANAPI_R4_) || \
 (defined(_XB6_PRODUCT_REQ_) && defined(_COSA_BCM_ARM_))
 	syscfg_get( NULL, "resource_monitor_interval", buf, sizeof(buf));
         if( 0 == strlen(buf) )

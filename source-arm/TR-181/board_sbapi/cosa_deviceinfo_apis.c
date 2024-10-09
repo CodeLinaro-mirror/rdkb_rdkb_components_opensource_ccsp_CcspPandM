@@ -123,6 +123,12 @@ static int writeToJson(char *data, char *file);
 #include "ccsp_vendor.h"
 #endif
 
+#ifdef _PLATFORM_BANANAPI_R4_
+#include "ccsp_vendor.h"
+#endif
+
+
+
 #ifdef _COSA_SIM_
 
 #elif defined(_COSA_INTEL_USG_ARM_) || defined(_COSA_BCM_ARM_) || defined(_COSA_BCM_MIPS_) || defined(_PLATFORM_IPQ_) || defined(_XER5_PRODUCT_REQ_)
@@ -1351,7 +1357,7 @@ isValidInput
   return returnStatus;
 }
 /* Maitenance window can be customized for bci routers */
-#if defined(_COSA_BCM_MIPS_) || defined(_PLATFORM_RASPBERRYPI_)
+#if defined(_COSA_BCM_MIPS_) || defined(_PLATFORM_RASPBERRYPI_) || defined(_PLATFORM_BANANAPI_R4_)
 ANSC_STATUS
 CosaDmlDiGetFirmwareUpgradeStartTime
     (
@@ -1441,7 +1447,7 @@ CosaDmlDiGetFirmwareUpgradeStartTime
 }
 #endif
 
-#if defined(_COSA_BCM_MIPS_) || defined(_PLATFORM_RASPBERRYPI_)
+#if defined(_COSA_BCM_MIPS_) || defined(_PLATFORM_RASPBERRYPI_) || defined(_PLATFORM_BANANAPI_R4_)
 ANSC_STATUS
 CosaDmlDiGetFirmwareUpgradeEndTime
     (
@@ -4003,7 +4009,7 @@ void FillPartnerIDValues(cJSON *json , char *partnerID , PCOSA_DATAMODEL_RDKB_UI
 					v_secure_system("sh /lib/rdk/wan_ssh.sh disable &");
 				}
 
-#if defined(_COSA_BCM_ARM_) && !defined(_CBR_PRODUCT_REQ_) && !defined(_PLATFORM_RASPBERRYPI_) && !defined(_ENABLE_DSL_SUPPORT_)
+#if defined(_COSA_BCM_ARM_) && !defined(_CBR_PRODUCT_REQ_) && !defined(_PLATFORM_RASPBERRYPI_) && !defined(_ENABLE_DSL_SUPPORT_) && !defined(_PLATFORM_BANANAPI_R4_)
                                 paramObjVal = cJSON_GetObjectItem(cJSON_GetObjectItem( partnerObj, "Device.DeviceInfo.X_RDKCENTRAL-COM_Syndication.CMVoiceImageSelect"), "ActiveValue");
                                 if ( paramObjVal != NULL )
                                 {

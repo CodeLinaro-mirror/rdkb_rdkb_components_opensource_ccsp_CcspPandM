@@ -340,7 +340,7 @@ DeviceInfo_GetParamStringValue_Custom
 
 	if (strcmp(ParamName, "X_COMCAST-COM_MTA_MAC") == 0)
 	{
-#if !defined(_PLATFORM_RASPBERRYPI_) && !defined(_PLATFORM_TURRIS_)
+#if !defined(_PLATFORM_RASPBERRYPI_) && !defined(_PLATFORM_TURRIS_) && !defined(_PLATFORM_BANANAPI_R4_)
   	   CosaDmlDiGetMTAMacAddress(NULL, pValue,pulSize);
 #endif
 	   return 0;
@@ -383,7 +383,7 @@ DeviceInfo_GetParamStringValue_Custom
 
 	if (strcmp(ParamName, "X_COMCAST-COM_MTA_IP") == 0)
 	{
-#if !defined(_PLATFORM_RASPBERRYPI_) && !defined(_PLATFORM_TURRIS_)
+#if !defined(_PLATFORM_RASPBERRYPI_) && !defined(_PLATFORM_TURRIS_) && !defined(_PLATFORM_BANANAPI_R4_)
    	   CosaDmlDiGetMTAIPAddress(NULL, pValue,pulSize);
 #endif
 	   return 0;
@@ -391,7 +391,7 @@ DeviceInfo_GetParamStringValue_Custom
 
 	if (strcmp(ParamName, "X_COMCAST-COM_MTA_IPV6") == 0)
 	{
-#if !defined(_PLATFORM_RASPBERRYPI_)
+#if !defined(_PLATFORM_RASPBERRYPI_) && !defined(_PLATFORM_BANANAPI_R4_)
    	   CosaDmlDiGetMTAIPV6Address(NULL, pValue,pulSize);
 #endif
 	   return 0;
