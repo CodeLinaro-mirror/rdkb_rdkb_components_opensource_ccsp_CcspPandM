@@ -213,6 +213,8 @@ int id = 0;
 
 #define NUM_OF_DEVICEINFO_VALUES (sizeof(deviceinfo_set_table)/sizeof(deviceinfo_set_table[0]))
 
+#define CALC_SPACE_LEFT(x) (sizeof(x) - strlen(x) - 1)
+
 enum  pString_val {
     UIACCESS,
     UISUCCESS,
@@ -445,7 +447,7 @@ static void UpdateSettingsFile( char param[64], char value[10] )
             {
                 continue;
             }
-            strncat(FileData, Line,sizeof(FileData)-strlen(FileData)-1);
+            strncat(FileData, Line, CALC_SPACE_LEFT(FileData));
         }
 
     }
@@ -460,7 +462,7 @@ static void UpdateSettingsFile( char param[64], char value[10] )
           return;
         }
 
-        strncat(FileData, Line, sizeof(FileData)-strlen(FileData)-1);
+        strncat(FileData, Line, CALC_SPACE_LEFT(FileData));
     }
 
     fp = fopen ("/tmp/.hwselftest_settings", "w");
@@ -14455,8 +14457,8 @@ IPv6onLnF_SetParamBoolValue
 							if(strncmp(Inf_name,token,strlen(Inf_name)))
 							{
                                 /* CID 53147 Calling risky function : fix */
-                                strncat(OutBuff,token,sizeof(OutBuff)-strlen(OutBuff)-1);
-                                strncat(OutBuff,",",sizeof(OutBuff)-strlen(OutBuff)-1);
+                                strncat(OutBuff,token,CALC_SPACE_LEFT(OutBuff));
+                                strncat(OutBuff,",",CALC_SPACE_LEFT(OutBuff));
 							}
 
 						   }
@@ -14469,8 +14471,8 @@ IPv6onLnF_SetParamBoolValue
 			{
 				if(bValue)
 				{
-				strncat(OutBuff,Inf_name,sizeof(OutBuff)-strlen(OutBuff)-1);
-				strncat(OutBuff,",",sizeof(OutBuff)-strlen(OutBuff)-1);
+				strncat(OutBuff,Inf_name,CALC_SPACE_LEFT(OutBuff));
+				strncat(OutBuff,",",CALC_SPACE_LEFT(OutBuff));
 				syscfg_set_commit(NULL, "IPv6_Interface",OutBuff);
 				}
 			}
@@ -14656,8 +14658,8 @@ IPv6onXHS_SetParamBoolValue
 									   while((token = strtok_r(pt, ",", &pt))) {
 										if(strncmp(Inf_name,token,strlen(Inf_name)))
 										{
-											strncat(OutBuff,token,sizeof(OutBuff) - strlen(OutBuff) - 1);
-											strncat(OutBuff,",",sizeof(OutBuff) - strlen(OutBuff) - 1);
+											strncat(OutBuff,token,CALC_SPACE_LEFT(OutBuff));
+											strncat(OutBuff,",",CALC_SPACE_LEFT(OutBuff));
 										}
 
 									   }
@@ -14670,8 +14672,8 @@ IPv6onXHS_SetParamBoolValue
 						{
 							if(bValue)
 							{
-							strncat(OutBuff,Inf_name,sizeof(OutBuff)-strlen(OutBuff)-1);
-							strncat(OutBuff,",",sizeof(OutBuff)-strlen(OutBuff)-1);
+							strncat(OutBuff,Inf_name,CALC_SPACE_LEFT(OutBuff));
+							strncat(OutBuff,",",CALC_SPACE_LEFT(OutBuff));
 							syscfg_set_commit(NULL, "IPv6_Interface",OutBuff);
 							}
 						}
@@ -14845,8 +14847,8 @@ IPv6onPOD_SetParamBoolValue
                                                                                 // CID 175253 : Buffer not null terminated (BUFFER_SIZE)
 										strncpy(OutBuff, buf, sizeof(OutBuff)-1);
 										/* CID 172842 - Calling risky function (DC.STRING_BUFFER) */
-										strncat(OutBuff,Inf_name,sizeof(OutBuff) - strlen(OutBuff) - 1);
-										strncat(OutBuff,",",sizeof(OutBuff) - strlen(OutBuff) - 1);
+										strncat(OutBuff,Inf_name,CALC_SPACE_LEFT(OutBuff));
+										strncat(OutBuff,",",CALC_SPACE_LEFT(OutBuff));
 										syscfg_set_commit(NULL, "IPv6_Interface",OutBuff);
 
 								}
@@ -14861,8 +14863,8 @@ IPv6onPOD_SetParamBoolValue
 									   while((token = strtok_r(pt, ",", &pt))) {
 										if(strncmp(Inf_name,token,strlen(Inf_name)))
 										{
-											strncat(OutBuff,token,sizeof(OutBuff)-strlen(OutBuff)-1);
-											strncat(OutBuff,",",sizeof(OutBuff)-strlen(OutBuff)-1);
+											strncat(OutBuff,token,CALC_SPACE_LEFT(OutBuff));
+											strncat(OutBuff,",",CALC_SPACE_LEFT(OutBuff));
 										}
 									   }
 
@@ -14874,8 +14876,8 @@ IPv6onPOD_SetParamBoolValue
 						{
 							if(bValue)
 							{
-							strcat(OutBuff,Inf_name);
-							strcat(OutBuff,",");
+							strncat(OutBuff,Inf_name,CALC_SPACE_LEFT(OutBuff));
+							strncat(OutBuff,",",CALC_SPACE_LEFT(OutBuff));
 							syscfg_set_commit(NULL, "IPv6_Interface",OutBuff);
 							}
 						}
@@ -15048,8 +15050,8 @@ IPv6onMoCA_SetParamBoolValue
 
                             // interface is not present in the list, we need to add interface to enable IPv6 PD
                             strncpy(OutBuff, buf, sizeof(buf));
-                            strncat(OutBuff,Inf_name,sizeof(OutBuff)-strlen(OutBuff)-1);
-                            strncat(OutBuff,",",sizeof(OutBuff)-strlen(OutBuff)-1);
+                            strncat(OutBuff,Inf_name,CALC_SPACE_LEFT(OutBuff));
+                            strncat(OutBuff,",",CALC_SPACE_LEFT(OutBuff));
 
                             CcspTraceWarning((">>>>Debug 1 Value of  OutBuff : %s infname  : %s  HomeIsolationEnable: %d \n", OutBuff, Inf_name, HomeIsolationEnable ));
                             syscfg_set_commit(NULL, "IPv6_Interface",OutBuff);
@@ -15064,8 +15066,8 @@ IPv6onMoCA_SetParamBoolValue
                             while((token = strtok_r(pt, ",", &pt))) {
                                 if(strncmp(Inf_name,token,strlen(Inf_name)))
                                 {
-                                    strcat(OutBuff,token);
-                                    strcat(OutBuff,",");
+                                    strncat(OutBuff,token,CALC_SPACE_LEFT(OutBuff));
+                                    strncat(OutBuff,",",CALC_SPACE_LEFT(OutBuff));
                                 }
                             }
                             CcspTraceWarning((">>>>Debug 2 Value of  OutBuff : %s infname  : %s  HomeIsolationEnable: %d \n", OutBuff, Inf_name, HomeIsolationEnable ));
@@ -15077,9 +15079,9 @@ IPv6onMoCA_SetParamBoolValue
                 {
                     if((bValue) && (HomeIsolationEnable == 1))
                     {
-                        strcat(OutBuff,Inf_name);
+                        strncat(OutBuff,Inf_name,CALC_SPACE_LEFT(OutBuff));
                         /* CID Calling risky function : fix */
-                        strncat(OutBuff, ",", sizeof(OutBuff) - strlen(OutBuff) - 1);
+                        strncat(OutBuff, ",", CALC_SPACE_LEFT(OutBuff));
                         syscfg_set_commit(NULL, "IPv6_Interface",OutBuff);
                         CcspTraceWarning((">>>>Debug 3 Value of  OutBuff : %s infname  : %s  HomeIsolationEnable: %d \n", OutBuff, Inf_name, HomeIsolationEnable ));
                     }
