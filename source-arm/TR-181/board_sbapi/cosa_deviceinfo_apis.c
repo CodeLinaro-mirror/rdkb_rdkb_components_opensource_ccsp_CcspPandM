@@ -5193,14 +5193,12 @@ ApplyNTPPartnerDefaults()
                                 if ( objItem != NULL )
                                 {
                                      objVal = objItem->valuestring;
-                                     objItem = NULL;
                                      if ( objVal != NULL )
                                      {
                                           if ( syscfg_set_commit(NULL,name[i],objVal) != 0)
                                           {
                                                CcspTraceWarning(("syscfg_set failed for %s\n",name[i]));
                                           }
-                                          objVal = NULL;
                                      }
                                      else
                                      {
