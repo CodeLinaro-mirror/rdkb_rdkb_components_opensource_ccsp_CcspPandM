@@ -201,7 +201,6 @@ pErr processSpeedBoostWebConfigRequest(void *pVoidData)
                 return execRetVal;
             }
             execRetVal->ErrorCode = BLOB_EXEC_SUCCESS;
-            snprintf(execRetVal->ErrorMsg, sizeof(execRetVal->ErrorMsg) - 1, "%s", "Empty XmSpeedBoost blob execution Success");
         }
         else
         {
@@ -296,7 +295,6 @@ pErr processSpeedBoostWebConfigRequest(void *pVoidData)
         }
 
         execRetVal->ErrorCode = BLOB_EXEC_SUCCESS;
-        snprintf(execRetVal->ErrorMsg, sizeof(execRetVal->ErrorMsg) - 1, "%s", "XmSpeedBoost blob execution Success");
     }
     else
     {
