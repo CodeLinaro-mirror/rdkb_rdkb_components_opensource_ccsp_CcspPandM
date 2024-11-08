@@ -2,7 +2,7 @@
    "properties" : {
 
       "comments" : "MANDATORY: !!! Please increment below version value for any new parameter added in this partners_defaults.json !!!",
-      "version" : "8.24"
+      "version" : "8.25"
    },
 
    "comcast" : {
@@ -86,6 +86,8 @@
       "Device.X_RDK_MQTT.Port" : "443",
       "Device.RouterAdvertisement.X_RDK_PvD.Enable" : "true",
       "Device.RouterAdvertisement.X_RDK_PvD.FQDN" : "pvd.comcast.net",
+      "Device.X_RDK_Features.WANConnectivityCheckType" : "0",
+      "Device.X_RDK_Features.LANIPv6ULA" : "false",
       "override" : {
         "CGA4332COM" : {
                      "Device.DeviceInfo.X_RDKCENTRAL-COM_Syndication.RDKB_UIBranding.CloudUI.brandname" : "Xfinity" ,
@@ -108,6 +110,15 @@
             "Device.Cellular.AccessPoint.X_RDK_DefaultAPN.1.IsNoRoaming" : "FALSE",
             "Device.Cellular.AccessPoint.X_RDK_DefaultAPN.1.IsAPNDisabled" : "FALSE"
          }
+      },
+      "apply_value_to_sysevent" : {
+            "Device.X_RDK_Features.NTPHealthCheck" : "false",
+            "Device.X_RDK_Features.SelfhelpWANConnectionDiag" : "false",
+            "Device.X_RDK_Features.LANIPv6GUA" : "false",
+            "Device.X_RDK_Features.HarvesterTimeOffset" : "true",
+            "Device.X_RDK_Features.HarvesterScanPublicWiFi" : "true",
+            "Device.X_RDK_Features.HomeSecurity.Enable" : "true",
+            "Device.X_RDK_Features.GatewayFailover.Enable" : "true"
       }
 },
 
@@ -185,7 +196,18 @@
       "Device.RouterAdvertisement.X_RDK_PvD.FQDN" : "",
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Enable" : "true",
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.ConfigURL" : "https://xconf.xcal.tv/loguploader/getT2Settings",
-      "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Version" : "2.0.1"
+      "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Version" : "2.0.1",
+      "Device.X_RDK_Features.WANConnectivityCheckType" : "0",
+      "Device.X_RDK_Features.LANIPv6ULA" : "false",
+      "apply_value_to_sysevent" : {
+            "Device.X_RDK_Features.NTPHealthCheck" : "false",
+            "Device.X_RDK_Features.SelfhelpWANConnectionDiag" : "false",
+            "Device.X_RDK_Features.LANIPv6GUA" : "false",
+            "Device.X_RDK_Features.HarvesterTimeOffset" : "true",
+            "Device.X_RDK_Features.HarvesterScanPublicWiFi" : "true",
+            "Device.X_RDK_Features.HomeSecurity.Enable" : "true",
+            "Device.X_RDK_Features.GatewayFailover.Enable" : "true"
+      }
 },
 
    "sky-italia" : {
@@ -264,10 +286,24 @@
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Enable" : "true",
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.ConfigURL" : "https://xconf.xcal.tv/loguploader/getT2Settings",
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Version" : "2.0.1",
+      "Device.X_RDK_Features.WANConnectivityCheckType" : "1",
+      "Device.X_RDK_Features.LANIPv6ULA" : "true",
       "override" : {
         "SR213" : {
 		"Device.DeviceInfo.X_RDKCENTRAL-COM_Syndication.XconfURL" : "https://secure.xconfds.coast.xcal.tv"
+        },
+        "SCER11BEL" : {
+                "Device.DeviceInfo.X_RDKCENTRAL-COM_Syndication.XconfURL" : "https://secure.xconfds.coast.xcal.tv"
         }
+      },
+      "apply_value_to_sysevent" : {
+            "Device.X_RDK_Features.NTPHealthCheck" : "true",
+            "Device.X_RDK_Features.SelfhelpWANConnectionDiag" : "true",
+            "Device.X_RDK_Features.LANIPv6GUA" : "true",
+            "Device.X_RDK_Features.HarvesterTimeOffset" : "false",
+            "Device.X_RDK_Features.HarvesterScanPublicWiFi" : "false",
+            "Device.X_RDK_Features.HomeSecurity.Enable" : "false",
+            "Device.X_RDK_Features.GatewayFailover.Enable" : "false"
       }
    },
 
@@ -347,6 +383,8 @@
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Enable" : "true",
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.ConfigURL" : "https://xconf.xdp.eu-1.xcal.tv/loguploader/getT2Settings",
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Version" : "2.0.1",
+      "Device.X_RDK_Features.WANConnectivityCheckType" : "1",
+      "Device.X_RDK_Features.LANIPv6ULA" : "true",
       "override" : {
         "SR300" : {
                 "Device.X_RDK_WebConfig.URL" : "https://cpe-config-sky-uk.wp.xdp.comcast.net/api/v1/device/{mac}/config",
@@ -361,7 +399,23 @@
                 "Device.X_RDKCENTRAL-COM_Webpa.Server.URL" : "https://fabric.xmidt-eu.comcast.net:8080",
                 "Device.X_RDKCENTRAL-COM_Webpa.TokenServer.URL" : "https://issuer.xmidt-eu.comcast.net:8080/issue",
                 "Device.X_RDKCENTRAL-COM_Webpa.DNSText.URL" : "fabric.xmidt-eu.comcast.net"
+        },
+        "SCER11BEL" : {
+                "Device.X_RDK_WebConfig.URL" : "https://cpe-config-sky-uk.wp.xdp.comcast.net/api/v1/device/{mac}/config",
+                "Device.X_RDK_WebConfig.SupplementaryServiceUrls.Telemetry" : "https://cpe-profile-sky-uk.wp.xdp.comcast.net/api/v1/device/{mac}/config",
+                "Device.X_RDKCENTRAL-COM_Webpa.Server.URL" : "https://fabric.xmidt-eu.comcast.net:8080",
+                "Device.X_RDKCENTRAL-COM_Webpa.TokenServer.URL" : "https://issuer.xmidt-eu.comcast.net:8080/issue",
+                "Device.X_RDKCENTRAL-COM_Webpa.DNSText.URL" : "fabric.xmidt-eu.comcast.net"
         }
+      },
+      "apply_value_to_sysevent" : {
+            "Device.X_RDK_Features.NTPHealthCheck" : "true",
+            "Device.X_RDK_Features.SelfhelpWANConnectionDiag" : "true",
+            "Device.X_RDK_Features.LANIPv6GUA" : "true",
+            "Device.X_RDK_Features.HarvesterTimeOffset" : "false",
+            "Device.X_RDK_Features.HarvesterScanPublicWiFi" : "false",
+            "Device.X_RDK_Features.HomeSecurity.Enable" : "false",
+            "Device.X_RDK_Features.GatewayFailover.Enable" : "false"
       }
    },
 
@@ -442,6 +496,8 @@
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Version" : "2.0.1",
       "Device.RouterAdvertisement.X_RDK_PvD.Enable" : "false",
       "Device.RouterAdvertisement.X_RDK_PvD.FQDN" : "" ,
+      "Device.X_RDK_Features.WANConnectivityCheckType" : "0",
+      "Device.X_RDK_Features.LANIPv6ULA" : "false",
       "no_apply_system_default" : {
          "WNXL11BWL" : {
             "Device.Cellular.AccessPoint.X_RDK_DefaultAPNNumberOfEntries" : "1",
@@ -457,6 +513,15 @@
             "Device.Cellular.AccessPoint.X_RDK_DefaultAPN.1.IsNoRoaming" : "FALSE",
             "Device.Cellular.AccessPoint.X_RDK_DefaultAPN.1.IsAPNDisabled" : "FALSE"
          }
+      },
+      "apply_value_to_sysevent" : {
+            "Device.X_RDK_Features.NTPHealthCheck" : "false",
+            "Device.X_RDK_Features.SelfhelpWANConnectionDiag" : "false",
+            "Device.X_RDK_Features.LANIPv6GUA" : "false",
+            "Device.X_RDK_Features.HarvesterTimeOffset" : "true",
+            "Device.X_RDK_Features.HarvesterScanPublicWiFi" : "true",
+            "Device.X_RDK_Features.HomeSecurity.Enable" : "true",
+            "Device.X_RDK_Features.GatewayFailover.Enable" : "true"
       }
    },
 
@@ -537,6 +602,8 @@
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Version" : "2.0.1",
       "Device.RouterAdvertisement.X_RDK_PvD.Enable" : "false",
       "Device.RouterAdvertisement.X_RDK_PvD.FQDN" : "",
+      "Device.X_RDK_Features.WANConnectivityCheckType" : "0",
+      "Device.X_RDK_Features.LANIPv6ULA" : "false",
       "no_apply_system_default" : {
          "WNXL11BWL" : {
             "Device.Cellular.AccessPoint.X_RDK_DefaultAPNNumberOfEntries" : "1",
@@ -553,6 +620,15 @@
             "Device.Cellular.AccessPoint.X_RDK_DefaultAPN.1.IsAPNDisabled" : "FALSE"
 
          }
+      },
+      "apply_value_to_sysevent" : {
+            "Device.X_RDK_Features.NTPHealthCheck" : "false",
+            "Device.X_RDK_Features.SelfhelpWANConnectionDiag" : "false",
+            "Device.X_RDK_Features.LANIPv6GUA" : "false",
+            "Device.X_RDK_Features.HarvesterTimeOffset" : "true",
+            "Device.X_RDK_Features.HarvesterScanPublicWiFi" : "true",
+            "Device.X_RDK_Features.HomeSecurity.Enable" : "true",
+            "Device.X_RDK_Features.GatewayFailover.Enable" : "true"
       }
    },
 
@@ -633,6 +709,8 @@
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Version" : "2.0.1",
       "Device.RouterAdvertisement.X_RDK_PvD.Enable" : "false",
       "Device.RouterAdvertisement.X_RDK_PvD.FQDN" : "",
+      "Device.X_RDK_Features.WANConnectivityCheckType" : "0",
+      "Device.X_RDK_Features.LANIPv6ULA" : "false",
       "override" : {
       "CGM4140COM" : {
                 "Device.DeviceInfo.X_RDKCENTRAL-COM_Syndication.CMVoiceImageSelect" : "pc15mgcp"
@@ -657,6 +735,15 @@
             "Device.Cellular.AccessPoint.X_RDK_DefaultAPN.1.IsAPNDisabled" : "FALSE"
 
          }
+      },
+      "apply_value_to_sysevent" : {
+            "Device.X_RDK_Features.NTPHealthCheck" : "false",
+            "Device.X_RDK_Features.SelfhelpWANConnectionDiag" : "false",
+            "Device.X_RDK_Features.LANIPv6GUA" : "false",
+            "Device.X_RDK_Features.HarvesterTimeOffset" : "true",
+            "Device.X_RDK_Features.HarvesterScanPublicWiFi" : "true",
+            "Device.X_RDK_Features.HomeSecurity.Enable" : "true",
+            "Device.X_RDK_Features.GatewayFailover.Enable" : "true"
       }
    },
 
@@ -734,7 +821,18 @@
       "Device.RouterAdvertisement.X_RDK_PvD.FQDN" : "",
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Enable" : "true",
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.ConfigURL" : "https://xconf.xcal.tv/loguploader/getT2Settings",
-      "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Version" : "2.0.1"
+      "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Version" : "2.0.1",
+      "Device.X_RDK_Features.WANConnectivityCheckType" : "0",
+      "Device.X_RDK_Features.LANIPv6ULA" : "false",
+      "apply_value_to_sysevent" : {
+            "Device.X_RDK_Features.NTPHealthCheck" : "false",
+            "Device.X_RDK_Features.SelfhelpWANConnectionDiag" : "false",
+            "Device.X_RDK_Features.LANIPv6GUA" : "false",
+            "Device.X_RDK_Features.HarvesterTimeOffset" : "true",
+            "Device.X_RDK_Features.HarvesterScanPublicWiFi" : "true",
+            "Device.X_RDK_Features.HomeSecurity.Enable" : "true",
+            "Device.X_RDK_Features.GatewayFailover.Enable" : "true"
+      }
    },
 "axb3retail" : {
       "Device.DeviceInfo.X_RDKCENTRAL-COM_Syndication.RDKB_UIBranding.Footer.PartnerLink" : "http://www.surfboard.com",
@@ -809,7 +907,18 @@
       "Device.RouterAdvertisement.X_RDK_PvD.FQDN" : "",
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Enable" : "true",
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.ConfigURL" : "https://xconf.xcal.tv/loguploader/getT2Settings",
-      "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Version" : "2.0.1"
+      "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Version" : "2.0.1",
+      "Device.X_RDK_Features.WANConnectivityCheckType" : "0",
+      "Device.X_RDK_Features.LANIPv6ULA" : "false",
+      "apply_value_to_sysevent" : {
+            "Device.X_RDK_Features.NTPHealthCheck" : "false",
+            "Device.X_RDK_Features.SelfhelpWANConnectionDiag" : "false",
+            "Device.X_RDK_Features.LANIPv6GUA" : "false",
+            "Device.X_RDK_Features.HarvesterTimeOffset" : "true",
+            "Device.X_RDK_Features.HarvesterScanPublicWiFi" : "true",
+            "Device.X_RDK_Features.HomeSecurity.Enable" : "true",
+            "Device.X_RDK_Features.GatewayFailover.Enable" : "true"
+      }
   },
    "unknown" : {
 
@@ -884,7 +993,18 @@
       "Device.RouterAdvertisement.X_RDK_PvD.FQDN" : "",
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Enable" : "true",
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.ConfigURL" : "https://xconf.xcal.tv/loguploader/getT2Settings",
-      "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Version" : "2.0.1"
+      "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Version" : "2.0.1",
+      "Device.X_RDK_Features.WANConnectivityCheckType" : "0",
+      "Device.X_RDK_Features.LANIPv6ULA" : "false",
+      "apply_value_to_sysevent" : {
+            "Device.X_RDK_Features.NTPHealthCheck" : "false",
+            "Device.X_RDK_Features.SelfhelpWANConnectionDiag" : "false",
+            "Device.X_RDK_Features.LANIPv6GUA" : "false",
+            "Device.X_RDK_Features.HarvesterTimeOffset" : "true",
+            "Device.X_RDK_Features.HarvesterScanPublicWiFi" : "true",
+            "Device.X_RDK_Features.HomeSecurity.Enable" : "true",
+            "Device.X_RDK_Features.GatewayFailover.Enable" : "true"
+      }
    },
 
     "test-partner" : {
@@ -964,7 +1084,18 @@
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.ConfigURL" : "https://xconf.xcal.tv/loguploader/getT2Settings",
       "Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.Telemetry.Version" : "2.0.1",
       "Device.RouterAdvertisement.X_RDK_PvD.Enable" : "false",
-      "Device.RouterAdvertisement.X_RDK_PvD.FQDN" : ""
+      "Device.RouterAdvertisement.X_RDK_PvD.FQDN" : "",
+      "Device.X_RDK_Features.WANConnectivityCheckType" : "0",
+      "Device.X_RDK_Features.LANIPv6ULA" : "false",
+      "apply_value_to_sysevent" : {
+            "Device.X_RDK_Features.NTPHealthCheck" : "false",
+            "Device.X_RDK_Features.SelfhelpWANConnectionDiag" : "false",
+            "Device.X_RDK_Features.LANIPv6GUA" : "false",
+            "Device.X_RDK_Features.HarvesterTimeOffset" : "true",
+            "Device.X_RDK_Features.HarvesterScanPublicWiFi" : "true",
+            "Device.X_RDK_Features.HomeSecurity.Enable" : "true",
+            "Device.X_RDK_Features.GatewayFailover.Enable" : "true"
+      }
    }
 
 }
