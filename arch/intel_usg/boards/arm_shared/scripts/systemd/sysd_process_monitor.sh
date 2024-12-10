@@ -76,10 +76,15 @@ then
 				fi
 			fi
 			# Checking Home Security's PID
-			HOMESEC_PID=`pidof CcspHomeSecurity`
-			if [ "$HOMESEC_PID" == "" ]; then
-				echo_t "RDKB_PROCESS_CRASHED : HomeSecurity_process is not running, restarting it"
+			CcspHome_Security=`sysevent get HomeSecuritySupport`
+			if [ "$CcspHome_Security" = "false" ]; then
+        			echo "CcspHome_Security is disabled"
+			else
+                            HOMESEC_PID=`pidof CcspHomeSecurity`
+			    if [ "$HOMESEC_PID" == "" ]; then
+			        echo_t "RDKB_PROCESS_CRASHED : HomeSecurity_process is not running, restarting it"
 				$BINPATH/CcspHomeSecurity 8081&
+			    fi
 			fi
 
 			# Checking dropbear PID
