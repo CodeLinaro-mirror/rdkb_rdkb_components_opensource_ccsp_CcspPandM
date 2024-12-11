@@ -1525,12 +1525,28 @@ static int getIfStats2(const PUCHAR pName, PCOSA_DML_ETH_STATS pStats)
     char *tok, *delim = ": \t\r\n", *sp, *ptr;
     int idx;
 
+#if defined(_RDKB_GLOBAL_PRODUCT_REQ_)
+#define NET_EXT_STATS_FILE "/proc/net/dev_extstats"
+#define NET_STATS_FILE "/proc/net/dev" 
+
+    // check if dev_extstats exists in platform
+    fp = fopen(NET_EXT_STATS_FILE, "r");
+
+    if(fp == NULL)
+    {
+        fp = fopen(NET_STATS_FILE, "r");
+        // both files are not present . Return error
+        if(fp == NULL)
+            return -1;
+    }
+#else
 #ifdef _HUB4_PRODUCT_REQ_
     if ((fp = fopen("/proc/net/dev_extstats", "rb")) == NULL)
 #else
     if ((fp = fopen("/proc/net/dev", "rb")) == NULL)
 #endif /* _HUB4_PRODUCT_REQ_ */
         return -1;
+#endif /* _RDKB_GLOBAL_PRODUCT_REQ_ */
 
     /* skip head line */
     if (fgets(buf, sizeof(buf), fp) == NULL) {
@@ -1570,7 +1586,7 @@ static int getIfStats2(const PUCHAR pName, PCOSA_DML_ETH_STATS pStats)
             case 13:
                 pStats->DiscardPacketsSent = (ULONG)atol(tok);
                 break;
-#ifdef _HUB4_PRODUCT_REQ_
+#if defined(_HUB4_PRODUCT_REQ_) || defined(_RDKB_GLOBAL_PRODUCT_REQ_)
             case 9:
                 pStats->MulticastPacketsReceived = (ULONG)atol(tok);
                 break;
@@ -1592,7 +1608,7 @@ static int getIfStats2(const PUCHAR pName, PCOSA_DML_ETH_STATS pStats)
             case 25:
                 pStats->UnknownProtoPacketsReceived = (ULONG)atol(tok);
                 break;
-#endif /* _HUB4_PRODUCT_REQ_ */
+#endif /* _HUB4_PRODUCT_REQ_ || _RDKB_GLOBAL_PRODUCT_REQ_ */
             default:
                 break;
             }
