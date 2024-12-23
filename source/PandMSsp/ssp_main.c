@@ -59,7 +59,7 @@
 #include <semaphore.h>
 #include <fcntl.h>
 
-#if defined(_PLATFORM_RASPBERRYPI_)
+#if defined(_PLATFORM_RASPBERRYPI_) || defined(_PLATFORM_BANANAPI_R4_)
 #include <stdio.h>
 #include <sys/socket.h>
 #include <stdlib.h>
@@ -477,7 +477,7 @@ static int is_core_dump_opened(void)
 }
 #endif
 
-#if defined(_PLATFORM_RASPBERRYPI_)
+#if defined(_PLATFORM_RASPBERRYPI_) || defined(_PLATFORM_BANANAPI_R4_)
 int sock = 0;
 #endif
 
@@ -506,7 +506,7 @@ int main(int argc, char* argv[])
     RDK_LOGGER_INIT();
 #endif
 
-#if defined(_PLATFORM_RASPBERRYPI_)
+#if defined(_PLATFORM_RASPBERRYPI_) || defined(_PLATFORM_BANANAPI_R4_)
 	int id=0;
 	id=getuid();
 #endif
@@ -531,7 +531,7 @@ int main(int argc, char* argv[])
     pComponentName = gpPnmStartCfg->ComponentName;
 
 //REFPLTV-5 : RDKB Container lxcclient code to send events from pandm to host
-#if defined(_PLATFORM_RASPBERRYPI_)
+#if defined(_PLATFORM_RASPBERRYPI_) || defined(_PLATFORM_BANANAPI_R4_)
 if(id != 0)
 {
     struct sockaddr_in serv_addr;
