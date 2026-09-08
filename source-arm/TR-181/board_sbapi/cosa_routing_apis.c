@@ -3221,6 +3221,8 @@ Route6_GetIfNames(char iflist[][IFNAME_SIZ], int *nlist)
     if (!iflist || !nlist)
         return -1;
 
+    CcspTraceWarning(("%s v6 route table interface names for\n", 
+                        __FUNCTION__));
 #if defined(USE_TR181_PATH)
     int ifnum = g_GetParamValueUlong(g_pDslhDmlAgent, "Device.IP.InterfaceNumberOfEntries");
     if (ifnum <= 0)
@@ -3229,6 +3231,8 @@ Route6_GetIfNames(char iflist[][IFNAME_SIZ], int *nlist)
         if (*nlist < 2)
             return -1;
 
+    CcspTraceWarning(("%s nrlan0 v6 route table interface names for\n", 
+                        __FUNCTION__));
         snprintf(iflist[0], IFNAME_SIZ, "%s", "erouter0");
         snprintf(iflist[1], IFNAME_SIZ, "%s", "brlan0");
 #if defined (_COSA_BCM_MIPS_) || defined(_ENABLE_DSL_SUPPORT_)
