@@ -83,6 +83,7 @@
 
 #include "safec_lib_common.h"
 
+
 extern void* g_pDslhDmlAgent;
 
 #if ( defined(_COSA_SIM_))
@@ -3214,10 +3215,37 @@ Route6_IsRouteExist(const char *prefix, const char *gw, const char *dev)
 
 #define MAX_RT6IF       16
 #define IFNAME_SIZ      32
+#define WAN_IFNAME_MAX_LEN 64
+static int
+get_current_wan_ifname(char *ifname, size_t ifname_size)
+{
+    if (ifname == NULL || ifname_size == 0)
+    {
+        return -1;
+    }
+
+    ifname[0] = '\0';
+
+    if (commonSyseventGet("current_wan_ifname", ifname, ifname_size) != 0 ||
+        ifname[0] == '\0')
+    {
+        /* Fallback used by existing PandM code. */
+        if (commonSyseventGet("wan_ifname", ifname, ifname_size) != 0 ||
+            ifname[0] == '\0')
+        {
+            return -1;
+        }
+    }
+
+    return 0;
+}
+
 
 static int
 Route6_GetIfNames(char iflist[][IFNAME_SIZ], int *nlist)
 {
+    char wan_ifname[WAN_IFNAME_MAX_LEN] = {0};
+
     if (!iflist || !nlist)
         return -1;
 
@@ -3231,8 +3259,17 @@ Route6_GetIfNames(char iflist[][IFNAME_SIZ], int *nlist)
         if (*nlist < 2)
             return -1;
 
-    CcspTraceWarning(("%s nrlan0 v6 route table interface names for\n", 
+        CcspTraceWarning(("%s nrlan0 v6 route table interface names for\n", 
                         __FUNCTION__));
+        if (get_current_wan_ifname(wan_ifname, sizeof(wan_ifname)) != 0)
+        {
+            CcspTraceError(("%s: unable to get current WAN interface name\n",
+                    __FUNCTION__));
+            return ANSC_STATUS_FAILURE;
+        }
+
+        CcspTraceInfo(("%s: current WAN interface: %s\n",
+               __FUNCTION__, wan_ifname));
         snprintf(iflist[0], IFNAME_SIZ, "%s", "erouter0");
         snprintf(iflist[1], IFNAME_SIZ, "%s", "brlan0");
 #if defined (_COSA_BCM_MIPS_) || defined(_ENABLE_DSL_SUPPORT_)
