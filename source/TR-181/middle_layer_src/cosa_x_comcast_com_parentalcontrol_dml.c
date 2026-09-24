@@ -749,11 +749,12 @@ BOOL is_url(char *buff)
             port = closing_bracket + 2;
         }
     }
-    else
-    {
-        port = memchr(authority, ':', authority_end - authority);
-        if (NULL != port)
-            port++;
+        const char *host = strrchr(authority, '@');
+        if (NULL == host)
+            host = authority;
+        else
+            host++;
+        port = memchr(host, ':', authority_end - host);
     }
 
     if (NULL != port)
