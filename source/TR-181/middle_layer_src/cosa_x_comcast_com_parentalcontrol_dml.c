@@ -713,6 +713,12 @@ BOOL is_url(char *buff)
     char *str=NULL;
     int len=_ansc_strlen(buff);
     int count=0;
+    const char *authority;
+    const char *authority_end;
+    const char *port = NULL;
+    const char *character;
+    const char *closing_bracket;
+    unsigned long port_number = 0;
     const char spl[] = "-._~:/?#[]@!$&'()*+,;%=";
     while(buff[i] != '\0')
     {
@@ -724,6 +730,50 @@ BOOL is_url(char *buff)
     }    
     if((strncasecmp(buff,"http://",_ansc_strlen("http://"))!=0) && (strncasecmp(buff,"https://",_ansc_strlen("https://"))!=0))
         return FALSE;
+
+    authority = strstr(buff, "://") + 3;
+    authority_end = strpbrk(authority, "/?#");
+    if (NULL == authority_end)
+        authority_end = buff + len;
+
+    if ('[' == authority[0])
+    {
+        closing_bracket = memchr(authority, ']', authority_end - authority);
+        if (NULL == closing_bracket)
+            return FALSE;
+
+        if (closing_bracket + 1 < authority_end)
+        {
+            if (':' != closing_bracket[1])
+                return FALSE;
+            port = closing_bracket + 2;
+        }
+    }
+    else
+    {
+        port = memchr(authority, ':', authority_end - authority);
+        if (NULL != port)
+            port++;
+    }
+
+    if (NULL != port)
+    {
+        if (port == authority_end || authority_end - port > 5)
+            return FALSE;
+
+        for (character = port; character < authority_end; character++)
+        {
+            if (*character < '0' || *character > '9')
+                return FALSE;
+
+            port_number = (port_number * 10) + (*character - '0');
+            if (port_number > 65535)
+                return FALSE;
+        }
+
+        if (0 == port_number)
+            return FALSE;
+    }
 
     if(buff[len-1] == '.')
         return FALSE;
